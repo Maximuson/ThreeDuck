@@ -3,15 +3,18 @@ import {
   Scene,
   WebGLRenderer,
   PerspectiveCamera,
-  DirectionalLight
+  DirectionalLight,
+  AnimationMixer,
+  Clock
 } from "three";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import gltfFile from "../models/duck/Duck.gltf";
+import gltfFile from "../models/tygr/scene.gltf";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-let camera, controls, scene, renderer;
+let camera, controls, scene, renderer, mixer;
+const clock = new Clock();
 
 function init() {
   renderer = new WebGLRenderer();
@@ -24,7 +27,7 @@ function init() {
     1,
     500
   );
-  camera.position.set(0, 0, 10);
+  camera.position.set(0, 0, 400);
   camera.lookAt(0, 0, 0);
 
   // Instantiate a loader
@@ -51,8 +54,8 @@ function init() {
 
   controls.screenSpacePanning = false;
 
-  controls.minDistance = 10;
-  controls.maxDistance = 100;
+  controls.minDistance = 100;
+  controls.maxDistance = 500;
 
   controls.maxPolarAngle = Math.PI / 2;
   // Load a glTF resource
@@ -61,6 +64,10 @@ function init() {
     gltfFile,
     // called when the resource is loaded
     function(gltf) {
+      mixer = new AnimationMixer(gltf.scene);
+      gltf.animations.forEach(clip => {
+        mixer.clipAction(clip).play();
+      });
       scene.add(gltf.scene);
 
       gltf.animations; // Array<THREE.AnimationClip>
@@ -84,6 +91,12 @@ function init() {
 
 function render() {
   renderer.render(scene, camera);
+  // var delta = Clock.getDelta();
+
+  var delta = clock.getDelta();
+
+  if (mixer) mixer.update(delta);
+  // mixer.update(delta);
 }
 function animate() {
   requestAnimationFrame(animate);
