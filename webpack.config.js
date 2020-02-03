@@ -21,7 +21,7 @@ module.exports = {
         use: ["gltf-webpack-loader"]
       },
       {
-        test: /\.(bin|fbx)$/,
+        test: /\.(bin|fbx|json)$/,
         use: ["file-loader"]
       }
     ]

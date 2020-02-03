@@ -8,12 +8,14 @@ body {
 }
 canvas {
   display: block;
+  width: 100vw;
+  height: 100vh;
 }
-#info {
+/* #info {
   position: absolute;
   top: 10px;
   width: 100%;
   text-align: center;
   z-index: 100;
   display: block;
-}
+} */
