@@ -109,7 +109,7 @@ function main() {
     }
 
     objects.forEach((obj, ndx) => {
-      const speed = 0.1 + ndx * 0.05;
+      const speed = 0.5 + ndx * 0.05;
       const rot = time * speed;
       obj.rotation.y = rot;
     });
