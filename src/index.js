@@ -2,4 +2,5 @@
 // import "./examples/line";
 import "./css/styles.css";
 // import "./examples/tiger";
-import "./examples/text";
+import "./examples/chair"
+// import "./examples/text";

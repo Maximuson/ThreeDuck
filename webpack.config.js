@@ -17,7 +17,7 @@ module.exports = {
         use: ["file-loader"]
       },
       {
-        test: /\.(gltf)$/,
+        test: /\.(gltf|obj)$/,
         use: ["gltf-webpack-loader"]
       },
       {
