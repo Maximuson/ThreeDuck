@@ -1,17 +1,17 @@
 import * as THREE from "three";
 import { log } from "three";
-import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
-import { DDSLoader } from 'three/examples/jsm/loaders/DDSLoader.js';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { DDSLoader } from "three/examples/jsm/loaders/DDSLoader.js";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-
-
-
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
 function main() {
+  const container = document.createElement("div");
+  document.body.appendChild(container);
   const canvas = document.querySelector("#c");
   const renderer = new THREE.WebGLRenderer({ canvas });
-  let controls
+  let controls;
   const fov = 40;
   const aspect = 2; // the canvas default
   const near = 0.1;
@@ -21,7 +21,10 @@ function main() {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xaaaaaa);
-  
+
+  let stats = new Stats();
+  container.appendChild(stats.dom);
+
   // controls = new OrbitControls(camera, renderer.domElement);
   // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   // controls.dampingFactor = 0.05;
@@ -57,7 +60,7 @@ function main() {
 
     scene.add(obj);
     objects.push(obj);
-    window.objects = objects
+    window.objects = objects;
   }
 
   function createMaterial() {
@@ -74,38 +77,34 @@ function main() {
   }
 
   {
-    var onProgress = function ( xhr ) {
-
-      if ( xhr.lengthComputable ) {
-
-        var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
+    var onProgress = function(xhr) {
+      if (xhr.lengthComputable) {
+        var percentComplete = (xhr.loaded / xhr.total) * 100;
+        console.log(Math.round(percentComplete, 2) + "% downloaded");
       }
-
     };
 
-    var onError = function () { };
+    var onError = function() {};
     var manager = new THREE.LoadingManager();
-    manager.addHandler( /\.dds$/i, new DDSLoader() )
-    new MTLLoader( manager )
-					.setPath( '../src/models/chair/' )
-					.load( 'stu.mtl', function ( materials ) {
-
-						materials.preload();
-						new OBJLoader( manager )
-							.setMaterials( materials )
-							.setPath( '../src/models/chair/' )
-							.load( 'stu.obj', function ( object ) {
-
-                object.position.z = - 2000;
-                addObject(0,-20,object)
-								// scene.add( object );
-
-							}, onProgress, onError );
-
-					} );
-   
+    manager.addHandler(/\.dds$/i, new DDSLoader());
+    new MTLLoader(manager)
+      .setPath("../src/models/chair/")
+      .load("stu.mtl", function(materials) {
+        materials.preload();
+        new OBJLoader(manager)
+          .setMaterials(materials)
+          .setPath("../src/models/chair/")
+          .load(
+            "stu.obj",
+            function(object) {
+              object.position.z = -2000;
+              addObject(0, -20, object);
+              // scene.add( object );
+            },
+            onProgress,
+            onError
+          );
+      });
   }
 
   function resizeRendererToDisplaySize(renderer) {
@@ -135,6 +134,7 @@ function main() {
     });
 
     renderer.render(scene, camera);
+    stats.update();
 
     requestAnimationFrame(render);
   }
